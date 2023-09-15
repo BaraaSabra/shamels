@@ -11,10 +11,16 @@ import com.example.shamels.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     ArrayList<Dataclass>arrayList;
     Adapter adapter;
+    ApiService retrofitInstance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +29,23 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        retrofitInstance=ApiService.Retrofice.RetroficeInestans();
+        retrofitInstance.getAll().enqueue(new Callback<Respons>() {
+            @Override
+            public void onResponse(Call<Respons> call, Response<Respons> response) {
+                Respons respons=response.body();
+                ArrayList<Respons.UserData> userDataArrayList=respons.getUserDataArrayList();
+//                Adapter usersAdapter2 = new Adapter(getApplicationContext(),userDataArrayList,null);
+                binding.RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL,false));
+//                binding.RecyclerView.setAdapter(usersAdapter2);
+            }
 
+            @Override
+            public void onFailure(Call<Respons> call, Throwable t) {
+                t.getStackTrace();
+
+            }
+        });
 
 
 
